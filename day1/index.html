@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Book List</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="./vueversion3.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    .less {
+      color:red;
+    }
+
+    .more {
+      color: #000000;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-light " style="background-color: #000000;">
+    <div class="container-fluid">
+      <span class="navbar-brand mb-0 h1" style="color: #fff;">Books</span>
+    </div>
+  </nav>
+   <div class="container">
+    <h1 class="text-center my-5">Book List</h1>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+      <div v-for="book in books" :key="book.name" class="col">
+        <div class="card">
+          <img :src="book.image" alt="image" class="card-img-top">
+          <div class="card-body">
+            <h5 class="card-title">Name: {{ book.name }}</h5>
+            <!-- <h6 class="card-subtitle mb-2 text-muted">Author: {{ book.author }}</h6> -->
+            <p class="card-text" :class="[book.pages < 50 ? 'less' : 'more']">Pages: {{ book.pages }} pages</p>
+            <p class="card-text">Price: {{book.price}}</p>
+            <p class="card-text">Category: {{ book.category }}</p>
+            <button @click="addToWishlist(book)" class="btn btn-dark" :disabled="book.addedToWishlist">
+              Add to Wishlist
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <h2 class="text-center my-5">Wishlist</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Author</th>
+          <th>Price</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="book in wishlist" :key="book.name">
+          <td>{{ book.name }}</td>
+          <td>{{ book.author }}</td>
+          <td>{{ book.price }}</td>
+          <td><button @click="removeFromWishlist(book)" class="btn btn-danger">Remove</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<script src="./books.js"></script>
+  <script>
+    Vue.createApp({
+      data:()=> ({
+        books:books,
+        wishlist: []
+      }),
+      methods: {
+        addToWishlist(book) {
+          book.addedToWishlist = true;
+          this.wishlist.push(book);
+        },
+        removeFromWishlist(book) {
+          book.addedToWishlist = false;
+          const index = this.wishlist.indexOf(book);
+          if (index > -1) {
+            this.wishlist.splice(index, 1);
+          }
+        }
+       
+      },
+    }).mount(".container");
+  </script>
+</body>
+</html>
